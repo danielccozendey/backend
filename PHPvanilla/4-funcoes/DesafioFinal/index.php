@@ -26,25 +26,25 @@ $valorCompra = 150.00;
     <div class="card">
         <h2>Perfil do Cliente</h2>
         <hr>
-        
-        <!-- DESAFIO 2: Chame a função gerarIniciais($nomeUsuario) aqui dentro para imprimir o Avatar! -->
+
+        <!-- Chamando gerarIniciais($nomeUsuario) para imprimir o Avatar -->
         <div class="avatar">
-            <?php echo gerarIniciais($nomeUsuario); // Altere aqui ?>
+            <?php echo gerarIniciais($nomeUsuario); ?>
         </div>
 
         <p><strong>Nome:</strong> <?php echo $nomeUsuario; ?></p>
-        
+
         <!-- Usando a função para limpar o CPF -->
         <p><strong>CPF para o Banco:</strong> <?php echo limparDocumento($cpfDigitado); ?></p>
-        
+
         <!-- Usando a função para formatar dinheiro -->
         <p><strong>Total Bruto:</strong> <?php echo formatarMoeda($valorCompra); ?></p>
-        
+
         <?php 
             // Usando a função com referência (&) para dar 10% de desconto
             aplicarDesconto($valorCompra, 10); 
         ?>
-        
+
         <p><strong>Total com Desconto (10%):</strong> <?php echo formatarMoeda($valorCompra); ?></p>
 
     </div>

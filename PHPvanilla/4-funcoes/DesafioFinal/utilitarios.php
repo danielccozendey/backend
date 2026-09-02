@@ -24,26 +24,26 @@ function aplicarDesconto(float &$preco, float $porcentagem): void {
     $preco -= $desconto;
 }
 
-// ==========================================
-// SUA MISSÃO COMEÇA AQUI:
-// Crie uma função chamada gerarIniciais()
-// Ela deve receber uma $string (ex: "Diogo Barbosa")
-// E retornar uma $string com a primeira letra de cada palavra (ex: "DB")
-// DICA: Pesquise no Google como usar explode(), substr() e strtoupper() no PHP!
-// ==========================================
-// 4. Converter nome Completo para Iniciais UpperCase
+/**
+ * 4. Gera as iniciais de um nome completo
+ * Ex: "Diogo Barbosa" => "DB"
+ * Ex: "Ana Clara Silva" => "ACS"
+ */
 function gerarIniciais(string $nomeCompleto): string {
-    // Escreva sua lógica aqui!
-    // imagina que eu escrevi um nome completo com 3 partes (Ana Carolina Silva) => ACS
-    $palavras = explode(" ", $nomeCompleto); // => [Ana, Carolina, Silva]
-    // => percorrer o vetor e pegar cada inicial das palavras
-    $iniciais = "";
-    foreach ($palavras as $palavra) {
-        if($palavra !== ""){
-            $iniciais .= substr($palavra, 0, 1); // pegar a primeira letra da palavra e concatenar na variavel $iniciais
+    // Quebra a string em um array usando o espaço como separador
+    // Ex: "Diogo Barbosa" => ["Diogo", "Barbosa"]
+    $partesDoNome = explode(' ', trim($nomeCompleto));
+
+    $iniciais = '';
+
+    // Percorre cada palavra (nome/sobrenome) do array
+    foreach ($partesDoNome as $palavra) {
+        if ($palavra !== '') {
+            // substr($palavra, 0, 1) -> pega o 1º caractere da palavra
+            // strtoupper() -> garante que a letra fique maiúscula
+            $iniciais .= strtoupper(substr($palavra, 0, 1));
         }
     }
-    //devolver as iniciais
-    return strtoupper($iniciais); //devolver as inicias todas maiúsculos
 
+    return $iniciais;
 }

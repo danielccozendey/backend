@@ -6,7 +6,7 @@ declare(strict_types=1);
 require_once 'utilitarios.php';
 
 // Dados simulados
-$nomeUsuario = "Ana Clara Silva";
+$nomeUsuario = "Daniel Cazzotti";
 $cpfDigitado = "123.456.789-00";
 $valorCompra = 150.00;
 

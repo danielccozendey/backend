@@ -47,3 +47,7 @@ function real($v){ return "R$ " . number_format($v, 2, ',', '.'); }
 <?php endif; ?>
 </body>
 </html>
+
+
+
+

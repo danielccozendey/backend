@@ -13,3 +13,9 @@
 7. Sticky Forms — Técnica de repreencher os campos com os valores já digitados após um erro de validação, evitando que o usuário redigite tudo — melhora a UX e reduz abandono.
 
 8. DevTools (Network) — Abrir F12 → Network → marcar "Preserve log" → enviar o formulário → localizar a requisição → conferir o campo "Method" (deve mostrar POST) e verificar que os dados aparecem em "Form Data", não na URL.
+
+
+
+
+
+

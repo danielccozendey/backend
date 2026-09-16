@@ -61,3 +61,8 @@ $resultado = array_filter($produtos, function ($p) use ($nome, $preco) {
 
 </body>
 </html>
+
+
+
+
+

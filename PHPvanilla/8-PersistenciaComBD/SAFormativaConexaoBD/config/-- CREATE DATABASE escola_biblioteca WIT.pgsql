@@ -1,0 +1,1 @@
+-- CREATE DATABASE escola_biblioteca WITH ENCODING 'UTF8';

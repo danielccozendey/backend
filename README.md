@@ -582,7 +582,6 @@ As funções abaixo já fazem parte do PHP e podem ser chamadas diretamente no c
 
 **Atenção:** algumas funções modificam o array original, como `sort()`, `array_push()` e `array_pop()`. Já outras retornam um novo valor, como `count()`, `explode()` e `str_replace()`. Em caso de dúvida, consulte a documentação oficial do PHP e verifique o retorno da função.
 
-
 ##### Documentação PHP
 
 [Acesse a documentação oficial do PHP em português](https://www.php.net/manual/pt_BR/)
@@ -606,25 +605,25 @@ function calcularTotal($preco, $quantidade){
 $total = calcularTotal(25.00, 3);
 
 //imprimir é feito fora da função
-echo "Total da compra: R
+echo "Total da compra: R$ " .round($total,2);
+// Total da compra: R$ 75.00
 ```
-a função `calcualrtotal()` pode ser utilizada em uma pagina, relatorio ou teste. o `echo` aparece somente fora da função no momento de apresentar o resultado para o usuario.
 
+A função `calcualrTotal()`pode ser reutilizada em uma página, relatório ou teste. O `echo`aparece somente fora da função, no momento de apresentar o resultadi para o usuário.
 
 ##### Padrão de Uso corporativo (PHP 8 Strict Types)
 
-No mercado de trabalho, exigimos que a função avise exatamente o **TIPO**
- de dado que ela espera receber e o **TIPO** de dado que ela vai devolver
+No mercado de trabalho, exigimos que a unção avise exatamente o **TIPO** de dado que ela espera receber e o **TIPO** de dado que ela vai devolvar.
 
- isso e chamado de **tipagen de funções** Ao declarar os tipos, o código fica mas facil de entender e o PHP consegue indentificar alguns erros antes que eles causem problemas maiores no sistema.
+Isso é cahamado de **tipagem de funções**. Ao declarar os tipos, o código fica mais fácil de entender e o PHP consegue identificar alguns erros antes que eles causem problemas maiores no sistema. 
 
- os tipos mais usados:
+Os tipos mais usados:
 
- *`int`: numero inteiro, `10` ou `1024`;
-*`float`: numero decimal ou ponto flutuante, `10.90`;
-*`string`: texto, como `"MARIA"`;
-*`boll`: valor logico, `true` ou `false`;
-*`void`: identifica que a unção nao devolve nenhum valor;
+* `int`: número inteiro, `10` ou `1024`;
+* `float`: numero decimal ou ponto flutuante, `10.90`;
+* `string`: Texto, como `"Maria"`;
+* `bool`: valor lógico, `true` ou `false`;
+* `void`: identifica que a função não devolve nenhum valor;
 
 O tipo deve ser escrito antes do nome de cada parâmetro e o tipo da função deve ser escrito após os parênteses, precedido do ":", informando o que a função vai devolver
 
@@ -640,7 +639,6 @@ echo $mensagem;
 // Caderno custa R$ 25.90
 ```
 
-
 > **Resumo**: os tipos dos parâmetros documentam as entradas da função, o tipo após `:` documenta a saída da função.
 
 ##### O Tipo Mágico : `VOID`
@@ -654,13 +652,11 @@ function registraLog(string $mensagem): void{
     //apenas salvae em um arquivo de texto, não devolver nenhuma variável
     file_put_contents("erro.log", $mensagem);
 }
-  ```
-  
+```
+
 #### Escopo e Referencia (O Segredo da Memória)
 
 ##### O que é Escopo? ( A Regra de Las Vegas)
-
-
 
 *O que acontece dentro da função, fica dentro da função*. Uma variável criada fora não existe la dentro, e uma criada lá dentro morre quando a função acaba.
 
@@ -682,8 +678,6 @@ echo criarMensagem("Nome do Fulano"); //Correto: A função devolve sua variáve
 // CSM SENAI
 //Bem-Vindo! Nome do Fulano
 ```
-
-
 
 
 * *Como Enviar Dados Para uma Função?*
@@ -716,7 +710,6 @@ A função `saudar()`não conhece a variável global `$nome`. Ocasionando um err
 > **Resumo**: variáveis protegem os dados internos da função; parâmetros são o caminho recomendado para evitar Erros e enviar Informações, e `return`é usado para devolver um resultado ao códgio que chamou a função.
 
 
-
 ---
 
 ### Semana 5 - Arrays e Manipulação Avançada de Dados
@@ -725,10 +718,9 @@ Um array(também conhecido como vetor) é uma estrutura de dados usada para arma
 
 **Tipos de Arrays em PHP:**
 
-- Indexados(Núméricos): Usam Números interiros como índices(chaves), que começam em zero por padrão;
-- Associativos(Strings): Usam chaves(String) para identificar valores;
+- Indexados/Ordenados(Núméricos): Usam Números interiros como índices(chaves), que começam em zero por padrão;
+- Associativos/Não Ordenados(Strings): Usam chaves(String) para identificar valores;
 - Multidimensionais: Contêm um ou mais arrays dentro de outros arrays.
-
 
 **Exemplo de Arrays:**
 
@@ -752,19 +744,18 @@ echo $capitais["SP"]; //São Paulo
 
 > Obs: Em arrays associativos, nos trocamos os nº do índice por Nomes(Chaves/Keys). A setinha => significa "recebe"
 
+**Arrays Multidimensionais (Banco de Dados na Memória)
 
-**Arrays Multidimencionais (Banco De Dados na Memmoria):**
+É aqui que o "BackEnd" começa de verdade. o Array Muntidimensional é o formato como os Bancos de Dados chegar como respostas as solicitações feitas pela API.
 
-É aqui que o "Backend" começa de verdade. O Arrsy Multidimencional é o formato como Bancos e Dados chegar como respostas as solicitações feitas pela API.
+**Exemplo de Aplicação de Array Multifimensional:**
 
-**Exemplo de Aplicação de Array Multidimencionais:**
-
-```php 
+```php
 
 $clientes = [
-    ["id" => 1, "nome"=>"Ana", "email"=>"ana@email.com"],
-    ["id" => 2, "nome"=>"Bruno", "email"=>"bruno@gmail.com"],
-    ["id" => 3, "nome"=>"Carlos", "email"=>"carlos@hotmail.com"]
+    ["id" => 1, "nome"=>"Ana", "email"=>"ana@email.com", "ativo"=> true],
+    ["id" => 2, "nome"=>"Bruno", "email"=>"bruno@gmail.com", "ativo"=> false],
+    ["id" => 3, "nome"=>"Carlos", "email"=>"carlos@hotmail.com", "ativo"=>true]
 ];
 
 //Como Acessar o email do Bruno
@@ -783,7 +774,8 @@ foreach($clientes as $clienteAtual){
     echo $clienteAtual["nome"];
     echo $clienteAtual["email"];
 }
-// vai imprimir nome e email de todos os Cliente
+// vai imprimir nome e email de todos os Clientes do Array
+
 
 ```
 
@@ -812,8 +804,7 @@ $produtos = [
 
 // ajuste de preço em 10%
 $produtosAjustados = array_map(fn($p)=>$p[preco] = $p[preco]*1.1, $produtos);
-
- ```
+```
 
 #### Debugando um Array (Kit Primeiro Socorros)
 
@@ -839,29 +830,28 @@ echo var_dump($frutas);
 //Mostra Tudo: tipo de dados, o tamanho e o valor
 ```
 
+---
 
-### semana 6 - processamento HTTP e formulario HTML para backend
+### Semana 6 - Processamento HTTP e Formulários Web
 
+#### Anatomia de um Formulário HTML para BackEnd
 
-Antes do php processar qualque informação precisanmos coletar informções no frontend atraves de um `<form>` 
+Antes de PHP processar qualquer informação, precisamos coletar informações no FrontEnd através de um `<form>`
 
-** Exemplo de `<form>` HTML 
+**Exemplo de `<form>` HTML**
 
 ```html
-<form action="processa php" method="POST">
-    <label>nomecompleto</label>
-    <input type="text" id="campoNome" name="nomeUsuario" placeholder="digite seu nome">
-    <button type="submit">cadastrar</button>
-    </form>
+<form action="processa.php" method="POST">
+    <label>Nome Completo </label>
+    <input type="text" id="campoNome" name="nomeUsuario" placeholder="Digite seu nome">
+    <button type="submit">Cadastrar</button>
+</form>
 ```
 
 **O 3 Pilares do Formulário**
-
-1. action="processa php" -> o destiono: define qual script PHP no servidor receberá os dados.
-
-2. method="POST" -> O transporte: define a vida de protocolo http usada (GET ou POST).
-
-3. name="nomeUsuarios" -> A Etiquea do dado: É o nome da chave que o php usará no array associado ($POST ["nomeUsuario"]).
+1. action="processa.php" -> O Destino: Define qual script PHP no servidor receberá os dados.
+2. method="POST" -> O Transporte: Define a via de protocolo HTTP usada (GET ou POST).
+3. name="nomeUsuarios" -> A Etiqueta do Dado: É o nome da chave que o PHP usará no array associativo ($POST["nomeUsuario"]).
 
 > obs: Nunca Confundir `id` com `name` no input, o PHP ignora o `id`
 
@@ -871,11 +861,11 @@ Quando o Usuário clica no botão `type="submit"`, o navegador compila todas as 
 
 **O Formato de TransferÊncia**
 
-- **Método GET**: solicitar informações públicas e realizar buscas, mas altamente arriscada para dados privados
+- **Método GET**: solicitar informações públicas e realizar buscas, mas altamente arriscada para dados privados.
 
-- **Metodo POST**: As informções viajam quadradas dentro do protocolo
+- **Método POST**: As informações viajam quardadas dentro do protocolo
 
-## Testar o uso dos protocolos HTTP
+#### Testar o uso dos Protocolos HTTP
 
 OK
 
@@ -890,21 +880,17 @@ O método `GET` é utilizado quando a intenção do cliente é **buscar ou filtr
 O método `POST` é utilizado quando o formulário envia dados que devem ser processados para **criar ou modificar registros** no sistema (ex: cadastro de usuários, finalizações de compras, upload de arquivos)
 
 
-### Como os Métodos Funcionam ao PHP (`$_GET`, `$-POST`, `$-SERVER`) - As Superglobais 
+#### Como os Métodos Funcionam no PHP (`$_GET`, `$_POST`, `$_SERVER`) - As SuperGlobais
 
- 
 As Variáveis SuperGlobais são arrays internos pré-definidos que estão sempre acessiveis em qualquer parte do script php, sem precisar ser declaradas.
 
 - **$_GET**: Armazena dados passados pela URL via parâmetros de consulta (query string);
 - **$_POST**: Recolhe dados enviados por formulários usando método HTTP POST.
 - **$_SERVER**: Contém informações sobre o servidor, ambiente e caminhos de script
 
-
 **Poque usamos `??` para obter dados da SuperGlobal??**
 
-Usamos o Operador de Nulidade (Coalescência Nula) para verificar s o valor da variável não é `null`, se caso for `null` atribuimos um valor para evitar erros no script.
-
-
+Usamos o Operador de Nulidade (Coalescência Nula) para verificar se o valor da variável não é `null`, se caso for `null` atribuimos um valor para evitar erros no script.
 
 **Exemplo de Uso**:
 
@@ -924,7 +910,6 @@ if(isset($_POST["nome"])){
 }else{
     $nome = "";
 }
-
 ```
 
 #### Validação de Dados no BackEnd é Obrigatória
@@ -932,6 +917,8 @@ if(isset($_POST["nome"])){
 Muitos desenvolvedores iniciantes acreditam que colocar atributos `required`, `type="email"` ou `min=0` na <tag> do HTML é suficiente para proteger o sistema. **Isso é Ilusão**. Sempre devemos fazer validações de dados no código BackEnd. As validações no BackEnd devem acontecer sempre antes do processamento de qualquer dado recebido pelo usuário.
 
 ##### Funções Nativas Essenciais para Limpeza e Validação de Dados.
+
+Abaixo está uma tabela resumida das funções nativas do PHP usadas com frequência para limpar, verificar e validar entradas de formulário.
 
 | Função | Descrição | Quando usar | Exemplo simples |
 | :--- | :--- | :--- | :--- |
@@ -950,12 +937,12 @@ Muitos desenvolvedores iniciantes acreditam que colocar atributos `required`, `t
 
 >obs: use `htmlspecialchars() ao exibir valor em HTML => converte caracteres especiais em entidades correspondentes em HTML, evitando que o código seja interpretado erradamente pelo navegador. É usado principalmente na segurança web, para evitar atques Cross-Site-Scriptinf(XSS).
 
+
 #### Presenvação de Estado em Formulários (*Sticky Form*)
 
 A técnica do **Sticky Form** consiste em imprimir de volta o valor no atributo "value" do input, os dados que o usuário acaba de digitar, os valores são devolvidos aos inputs, caso ocorra algum erro de validação de dados no envio.
 
 **Exemplo de Uso:**
-
 
 ```php
 <div class="campo">
@@ -972,7 +959,6 @@ A técnica do **Sticky Form** consiste em imprimir de volta o valor no atributo 
 ---
 
 ### Semana 7 - Segurança no BackEnd - Sanitização, Validação e Proteção contra XSS
-
 
 **1º Mandamento do Desenvolvedor BackEnd**
 
@@ -1022,7 +1008,7 @@ Ex: usar `htmlspecialchars()`.
 
 ```mermaid
 
-flowchart 
+flowchart LR
 
     A[Entrada de Dados GET/POST]
     B{1. Validação}
@@ -1055,7 +1041,6 @@ flowchart
 | `"` | `&quot;` (*Quotation Mark*) | Não quebra atributos HTML `<input value="...">`. |
 | `'` | `&#039;` ou `&apos;` | Protege strings envoltas em aspas simples. |
 | `&` | `&amp;` (*Ampersand*) | Evita interpretação incorreta de entidades. |
-
 
 **A sintaxe no PHP**
 
@@ -1125,64 +1110,13 @@ if (filter_var($ip, FILTER_VALIDATE_IP) !== false) {
 }
 
 ```
-
---- 
-
-### Semana 8 - persistencia de Dados com Banco de Dados Relacional (PostGresql) e conexão PDO 
-
-**Tema:** Camada de acesso de Dados, Driver PDO(PHP Data Objects), Driver `pdo_psql`, padrão Sngleton, Isolamento de credeniais (.env) e tratamento d Exceções(PDOException)
-
-
-**Da memoria Volátil ao Banco de Dados**
-
-Em sistemas corporativos de grande porte, arquivos planos(.txt .json) não oferecem a segurança, integridade, concorrência e velocidade necessárias para aramazenamento de dados. Então é aqui que o **BackEnd encontrao Banco de Dados Relacional**.
-
-Banco de Dados Relacinal Permitem:
-
-- Conectar a lógica de programação server-side ao Sistema de Gerenciamento de Banco de Dados (SGBD)
-- Garantindo persistência definitiva e segura dos registros
-- Aplicando integridade referencial, constraints, consultas otimizadas e propriedade ACID aprendidas na disciplina de Banco de Dados
-
-> obs: Atomicidade, assegura que cada transação seja unica. Consistência, respeite todas as regras, restrições e chaves definidas, garantido a validade da transação. Isolamento, transações de forma independente. Durabilidade, transações são confirmadas, garantindo a persistÊncai permanente. 
-
-```mermaid
-flowchart LR
-    navegador['Navegar Web - Cliente/Front']
-    servidor['Servidor PHP - Processa as Regras de Negócio ']
-    banco['SGBD - Base de Dados Persistente'] 
-
-    navegador --> |"Requisição HTTP"| servidor
-    servidor --> |"Driver PDO"| banco
-    servidor --> |"Resposta HTML/JSON"| navegador
-```
-
-**O que é o PDO(PHP Data Objects)?**
-
-O **PDO** é uma camada de abstração de acesso a dados integrada nativamente ao PHP. Ele fornece uma interface uniforme e orientada a objetos para se comunicar com múltiplos sistemas de banco de dados (PostgreSQL, MySQL, SQLite, OracleSQL, SQLServer)
-
-```mermaid
-flowchart TB
-    aplicacao[Aplicação PHP - Controller, Services, Models]
-    pdo[Interface PDO - Métodos: query, prepare, execute]
-    driver[Driver PDO_PGSQL]
-    drivermysql[Driver PDO_MYSQL]
-    postgres[Banco PostgreSQL]
-    mysql[Banco MySQL]
-    
-
-    aplicacao --> pdo
-    pdo --> driver
-    pdo --> drivermysql
-    driver --> postgres
-    drivermysql --> mysql
-```
-
+---
 
 ### Semana 8 - Persistência de Dados com Banco de Dados Relacional (PostGreSql) e Conexão PDO
 
 **Tema:** Camada de cesso a Dados, Driver PDO(PHP Data Objects), Driver `pdo_pgsql`, Padrão Singleton, Isolamento de Credenciais (.env) e Tratamento de Exceções (PDOException) 
 
-**Da memoria Volátil ao Banco de Dados**
+#### **1. Da memoria Volátil ao Banco de Dados**
 
 Em sistemas corporativos de grande porte, arquivos planos(.txt .json) não oferecem a segurança, integridade, concorrência e velocidade necessárias para aramazenamento de dados. Então é aqui que o **BackEnd encontrao Banco de Dados Relacional**.
 
@@ -1205,7 +1139,7 @@ flowchart LR
     servidor --> |"Resposta HTML/JSON"| navegador
 ```
 
-**O que é o PDO(PHP Data Objects)?**
+#### **2. O que é o PDO(PHP Data Objects)?**
 
 O **PDO** é uma camada de abstração de acesso a dados integrada nativamente ao PHP. Ele fornece uma interface uniforme e orientada a objetos para se comunicar com múltiplos sistemas de banco de dados (PostgreSQL, MySQL, SQLite, OracleSQL, SQLServer)
 
@@ -1232,7 +1166,7 @@ flowchart TB
     driveroracle --> oracle
 ```
 
-**Vantagens do uso do PDO**
+#### **3. Vantagens do uso do PDO**
 
 - **Portabilidade de Código**: Os métodos de conexão , consulta e transações são idênticos , independente do banco utilizado. Se o cliente migrar do banco PostgreSQL para outro SGBD, o programdor apenas altera a string DSN de conexão, preservando toda a lógica de acesso já criada.
 - **Suporte Nativo* a Prepared Statements: O PDO foi projetado para trabalhar com consultas nativas, oferencendo a defesa contra ataques de **SQL Injection**
@@ -1251,7 +1185,7 @@ pgsql:host=127.0.0.1;port=5432;dbname=seu_banco
   └─ Identificador do driver do SGBD (pgsql) - PostgreSQL
 ```
 
-**A Configuração do PDO**
+#### **4. A Configuração do PDO**
 
 Ao instanciar um objeto PDO, devemos configurar quatro flags essenciais  que determian como o driver se comportará frnete a erros e consultas
 
@@ -1271,12 +1205,10 @@ $opcoes = [
 ];
 ```
 
-
 **Detalhamento das Flags**:
 - PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION : por padrão o PDO pode falhar silenciosamente e retorna apenas `false`. Ao Ativar o ERR_MODE força o PHP a dispara uma `PDOException`, permitindo que o nosso código interprete qualquer erro em um bloco `try-catch`.
-- PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC : por padrão o métos `fetch()`retrona um array duplicado ontendo índices numéricos`[0,1]`e associativos`["id","código_maquina"]`. Definir `FETCH_ASSOC`reduz o consumo de memória RAM pela metade e entrega coleções limpas
+- PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC : por padrão o métos `fetch()`retrona um array duplicado ontendo índices numéricos`[0,1]`e associativos`["id","código_maquina"]`. Definir `FETCH_ASSOC`reduz o consumo de memória RAM pela metade e entrega coleções limpas.
 - PDO::ATTREMULATE_PREPARES => false : Garante que o PHP envie a consulta e os parêmtros separados diretamente para o planejador do BD processar, blindando e aplicação contra ataques sofisticados de `SQL_injection`
-
 
 ---
 
@@ -1321,7 +1253,7 @@ logs/*.log
 
 #### **6. Padrão Singleton de Conexão**
 
-Iamagine uma aplicação web com 500 usuários acessando simultaneamente. Se cada script, função executar `new PDO()` sempre que precisar consultar o banco, teremos milhares de conexões de redes abertas desnecessariamente. 
+Imagine uma aplicação web com 500 usuários acessando simultaneamente. Se cada script, função executar `new PDO()` sempre que precisar consultar o banco, teremos milhares de conexões de redes abertas desnecessariamente. 
 
 No SGBD(PostgreSQL), cada conexão aberta cria um processo no sistema operacional dedicado. Abrir conexões repetidas esgota rapidamente o limite configurado(`max_connection`) do BD gerando erro:
 `Fatal Error: sorry, too many clients already`
@@ -1347,5 +1279,346 @@ Qaundo uma tentativa de conexão falha(servidor desligado, senha incorreta, port
 * **Para o Usuário**: Exibir mensagens Amigáveis e genéricas: *Não foi possível  processar sua solicitaç~çao. Tente novamente mais tarde*
 * **Para a Equipe de Desenvolvimento**: Gravar os detalhes técnicos completos com timestamp em um arquivo de log seguro (`logs/database.log`).
 
+
+---
+
+### Semana 9 - CRUD Completo com Prepared Statement e Proteção contra SQL Injection
+
+**Tema:** Operações CRUD Completas, Vulnerabilidade SQL Injetion (OWASP Top do problemas de CiberSegurança), Consultas com PDO (`prepare`, `bindValue`, `execute`), Marcadores Nomeados e Padrão Arquitetura DAO(Data Access Object). 
+
+
+#### **1. As Operações CURD**
+
+Em qualquer qualquer organização, o objetivo central de um sistema de software é manipular informações com segurança, velocidade e consistência. Para que isso aconteça, as operações fundamentais, que todo desenvolvedor BackEnd deve dominar com perfeição são 4 conhecidas pelo acrônimo **CRUD**
+
+```mermaid
+flowchart TB
+    subgraph CRUD ["As 4 Operações Fundamentais"]
+        C["<b>C</b>reate (Criar)"] -->|"Comando SQL"| SQL_I["INSERT INTO ..."]
+        R["<b>R</b>ead (Ler)"] -->|"Comando SQL"| SQL_S["SELECT ... FROM ..."]
+        U["<b>U</b>pdate (Atualizar)"] -->|"Comando SQL"| SQL_U["UPDATE ... SET ... WHERE ..."]
+        D["<b>D</b>elete (Excluir)"] -->|"Comando SQL"| SQL_D["DELETE FROM ... WHERE ..."]
+    end
+
+    style C fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+    style R fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
+    style U fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12
+    style D fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#7f1d1d
+
+```
+Na Semana 08, aprendemos sobre conexão usando PDO e padrão Singleton. Agora, vamos dar vida a essa conexão: aprenderemos a inserir novos registros, consultar dados com filtros dinâmicos, atualizar e remover com segurança os dados do banco.
+
+#### **2. A Maior Ameaça da História da WEB: SQL Injection (SQLi)
+
+Antes de escrever as query de manipulação, precisamos aprender sobre os perigos que cercam o banco de dados
+
+A vulnerabilidade `SQL Injection` ocupa o topo das listas de falha de segurança cibernética. Ela ocorre quando um desenvolvedor comete o erro gravíssimo de **concatenar entradas fornecidads pelo usuário diretamente na instrução SQL** 
+
+**Exemplo de Código Proibido**:
+
+```php
+// Código Vulnerável e Perigoso - Nunca Faça Isso
+$usuario = $_POST["usuario"];
+$senha = $_POST["senha"];
+// o invasor digita:  admin' --
+
+$sql = "SELECT * FROM usuarios WHERE login = '". $usuario . "' AND senha = '" . senha . "'";
+$resultado = $pdo->query($sql);
+```
+**O que acontece quando o atacante digita `admin ' --`?**
+
+```sql
+SELECT * FROM usuarios WHERE login = 'admin'--' AND senha = '...';
+```
+
+1. A aspa digitada pelo atacante fecha a string do login antecipadamente
+2. o operador `--`no PostgrSQL indica o **início de um comentário** pelo motor do banco
+3. O restante da query ( a validação da senha! ) é **ignorada** pelo motor de busca do banco
+4. **Resultado**: o invasor faz login instantaneamente na conta do administrador sem precisar saber a senha!
+
+---
+
+#### **3. Cenários de SQL Injetion**
+
+| Tipo de Injeção | Payload Injetado pelo Invasor | Consequência no PostgreSQL |
+| :--- | :--- | :--- |
+| **Bypass de Autenticação** | `' OR '1'='1` | A condição torna-se sempre verdadeira, retornando o primeiro usuário da tabela (geralmente o administrador do sistema). |
+| **Exfiltração de Dados (UNION SQLi)** | `' UNION SELECT id, nome, senha FROM usuarios --` | O invasor anexa tabelas sigilosas inteiras no resultado da consulta visível na tela, violando a LGPD. |
+| **Destruição / Adulteração (Stack Queries)** | `'; DROP TABLE pecas_industriais; --` | Dependendo do driver e das permissões do usuário, o invasor encerra a consulta atual e executa comandos de destruição em massa. |
+
+#### 4. A Defesa Contra SQL Injection
+
+Para eliminar vulnerabilidade usa-se  a **Prepared Statements (Consultas Preparadas com PDO)**
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant App as Aplicação PHP
+    participant SGBD as Motor PostgreSQL
+
+    Note over App, SGBD: Fluxo Seguro com Prepared Statement
+    App->>SGBD: 1. PREPARE: "SELECt * FROM usuarios WHERE login = : user"
+    Note over SGBD: Compila a query, gerando o plano de execução<br/>e define que :user É ESTRITAMENTE DADO!
+    SGBD->>App: Query compilada pronta para receber parâmetros
+    App->>SGBD: 2. EXECUTE: [':user' => "admin' --"]
+    Note over SGBD: O banco busca literalmente um usuário<br/>cujo nome seja "admin ' --". Nenhuma tag vira código!
+    SGBD->>App: Retorna registro ou vazio (Sem invasão!)
+
+```
+
+#### **5. Marcadores/Denominadores Nomeados**
+
+O PDO aceita dois formatod de marcadores em prepare statement
+
+**1. Posicionais (`?`)**
+
+```php
+//funciona, mas é sujeito a erros de contagem de parâmetros em queries longas
+$sql = "INSERT INTO pecas (sku, descricao, preco) VALUE (?, ?, ?);
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$sku, $descricao, $preco]);
+```
+
+**2. Nomeação (`:nome`) - Padrão Recomendado**
+
+```php
+//Autoexplicativo, altamente legivel e à prova de inversão de ordem
+$sql = "INSERT INTO pecas (sku, descricao, preco) VALUE (:sku, :desc, :preco)";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([ // usa-se um vetor chave valor para determinar a nomeção dos valores atribuidos
+    ":sku" => $sku,
+    ":desc" => $descricao,
+    ":preco" => $preco
+]);
+```
+
+#### **6. Método de Vinvulação: `bindValue()` Vs. `bindParam()`**
+
+Ao associar parâmetros a uma consulta `prepare`, pode-se utilizar dpois métodos com comportamentos distintos. o `bindValue()` ou o `bindParam()`, o primeiro vincula um valor fixo no momento da chamada, enaquanto o segundo vincula uma variável por referÊncia e só avalia o valor real quando a consulta é executada.
+
+**Exemplo `bindValue()`** : Associa o valor extao da variável naquele momento. é mais comum e seguro para 95% dos casos de uso
+```php
+$id = 10;
+$stmt->bindValue(":id", $id, PDO::PARAM_INT);
+$id = 20; //não altera o valor que já foi passado no bindValue!
+$stmt->execute(); //executa com id = 10
+```
+
+
+**Exemplo `bindParam()`** : Associa a variável como uma referência de memória (`&`). O valor é lido no momento exato da chamada èxecute`. Usar apenas em loops ou situações específicas que precisa alterar o valor repetidamente. 
+```php
+$id = 10;
+$stmt->bindParam(":id", $id, PDO::PARAM_INT);
+$id = 20; //altera o valor da referência 
+$stmt->execute(); //executa com id = 20
+```
+
+> obs: Tipagem Explícitas com Constantes do PDO:
+> Para Garantir que o PostgreSQL interprete corretamente o tipo de dado, informe sempre a constante correspondente:
+> * `PDO::PARAM_INT`: Para chaves primárias, quantidades e inteiros.
+> * `PDO::PARAM_STR`: Para textos, strings, datas e números decimais (`NUMERIC`).
+> * `PDO::PARAM_BOOL`: Para valores booleanos (`true`/`false`).
+> * `PDO::PARAM_NULL`: Para passar valores nulos explícitos.
+
+#### **7. O Padrão de Arquitetura DAO(DATA ACCESS OBJECT)**
+
+Em aplicações profissionais, comando SQL nunca devem ser escritos diretamente dentro de arquivos de interface visual ( como páginas HTML ou controladores de tela)
+
+Para separar a **lógica de apresentação** da **lógica de acesso a dados**, usa-se o padrão de projetos **DAO(Data Access Object)**:
+
+```mermaid
+flowchart LR
+    A["Interface Web/Controlador<br/>(index.php)"]
+    B["Classe DAO<br/>(LogicaDAO.php)"]
+    C["SGBD<br/>(banco_dados)"]
+
+    A -->|"Chama métodos:<br/>salvar(),listar(),excluir()"| B
+    B -->|"Executa Prepared Statement<br/>via PDO"| C
+```
+
+### Semana 10 - Sessões, Cookies e Autenticação Segura
+
+**Tema:** Gestão de Estado com HTTP, Ciclo de Vida da Sessão(`$_SESSION`), Cookies, Hashing de Criptografia, Middlewares de Autenticação
+
+#### **O Protocolo HTTP: Como ele lembra de você?**
+
+O Protocolo HTTP é totalmente **STATELESS (sem aramazenamento de estado)**. Isso Significa que o servidor web trata cada requisição HTTP de forma isolada, como se fosse a primeira vez que ele estivesse interagindo com o usuário do sistema.
+
+Para resolver esse problema sem obrigar o usuário a digitar o login e senha novamente a cada clique fazemos o seguinte:
+1. Ao fazer o login bem-sucedido, o servidor entrega ao cliente uma **comanda/pulseira VIP numerada* (um identificados de sessão única e aleatória).
+2. O navegador aramazena essa comanda/pulseira em um **Cookie**.
+3. A cada nova página solicitada, o navegador apresenta automaticamente essa pulseira no cabeçalho da requisição
+4. O PHP lê o número da comanda/pulseira, localiza os dados do usuário armazenados na memória do servidor(`$_SESSION`) e reconhece quem é ele!
+
+**Situação sem Armazenamento de Cookie e SESSION**
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Cliente as Navegador do Usuário
+    participant Servidor as Servidor PHP/BD
+
+    Cliente->>Servidor: 1. POST /login.php (Usuário envia email e senha)
+    Servidor-->>Cliente: 2. HTTP 200 OK (Credenciais válidas! Redireciona)
+    Note over Servidor: A conexão TCP é encerrada. O Servidor esquece do Usuário
+
+    Cliente->>Servidor: 3. GET /dashboard.php (Usuário tent ler os relatórios)
+    Note over Servidor: Servidor: "Quem é você? Nunca te vi antes!"
+    Servidor -->> Cliente: 4. HTTP 302 Redirect -> login.php
+```
+
+**Situação com Armazenamento de Cookie e SESSION**
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Navegador as Navegador do Usuário
+    participant PHP as Servidor PHP
+    participant Sessao as Armazenamento de $_SESSION
+
+    Navegador->>PHP: POST /login.php (envia usuário e senha)
+    PHP->>PHP: Valida as credenciais
+    PHP->>Sessao: Armazena os dados do usuário em $_SESSION
+    Sessao-->>PHP: Retorna o ID da sessão
+    PHP-->>Navegador: Resposta com Set-Cookie: PHPSESSID=<ID da sessão>
+    Note over Navegador: Guarda o ID da sessão no cookie
+
+    Navegador->>PHP: GET /dashboard.php com Cookie: PHPSESSID=<ID da sessão>
+    PHP->>Sessao: Busca os dados associados ao ID da sessão
+    Sessao-->>PHP: Retorna os dados do usuário
+    PHP-->>Navegador: Exibe o dashboard autenticado
+
+```
+
+#### **Como funciona o COOKIE HTTP**
+
+Um **Cookie** é um pequeno arquivo de texto (geralmente limitado a 4KB) gravvado pelo navegador a pedido do servidor através do cabeçalho de resposta `Set-Cookie`.
+
+**Cookies podem vazar informação?**
+
+Sim, se um cookie de sessão for configurado com parâmetros desprotegidos, qualquer script malicioso injetado na página (XSS) pode roubar a sessão do usuário logado.
+
+**Para evitar problemas de Segurança em Cookies:**
+
+| Flag de Segurança | O que ela faz? | Por que é indispensável? |
+| :--- | :--- | :--- |
+| **`HttpOnly`** | Impede que scripts JavaScript executem leitura no cookie via `document.cookie`. | **Neutraliza o roubo de sessão via XSS!** Mesmo que haja uma falha de injeção de script na tela, o navegador proíbe o JavaScript de ler o identificador de sessão. |
+| **`SameSite=Lax`** | Restringe o envio do cookie apenas a navegações originadas do próprio domínio. | **Protege contra ataques CSRF** (*Cross-Site Request Forgery*), impedindo que links externos forjem ações logadas. |
+| **`Secure`** | Garante que o cookie só seja transmitido em conexões criptografadas com **HTTPS**. | Impede que bisbilhoteiros em redes Wi-Fi públicas interceptem a sessão em trânsito (*Man-in-the-Middle*). *(Em ambiente local de desenvolvimento sem SSL, pode ser desativado temporariamente).* |
+
+#### **O Cilco de Vida da SESSÃO em PHP: `$_SESSION` no Servidor**
+
+Enqunto os cookies residem no Navegador, os dados da sessão ficam aramazenados com  **privacidade total dentro do servidor** (em arquivos temporários na memória).
+
+```mermaid
+flowchart TB
+    subgraph Cliente["Cliente-Side(Navegador)"]
+        cookie["Cookie de Sessão"]
+    end
+
+    subgraph Servidor["Server-Side(Servidor)"]
+        memoria["Superglobal $_SESSION"]
+        disco["Token"]
+    end
+
+    Cliente -->|"Interage com o UI"| cookie
+    cookie -->|"Envia Token no Header HTTP"| Servidor
+    Servidor -->|"Lê Token e Carrega Dados"| memoria
+    memoria <-->|"Persistência em Disco"| disco
+    Servidor -->|"Garante A Autenticação do Usuário"| Cliente
+
+    style cookie fill:#fed7aa,stroke:#ea580c,stroke-width:2px,color:#7c2d12
+    style memoria fill:#bbf7d0,stroke:#16a34a,stroke-width:2px,color:#14532d
+    style disco fill:#e2e8f0,stroke:#64748b,stroke-width:2px,color:#1e293b   
+
+```
+
+**Sintaxe Essencial do PHP para Sessões**
+
+```php
+//configurando a sessão com funções pré-definidas no PHP (documentação)
+
+//1. Configurar as flags dos cookies Antes de abrir a Sessão
+session_set_cookie_params([
+    "lifetime"  => 0,       //Cookie expira ao fechar o navegador
+    "path"      => "/"      //Válido para todo o domínio do site
+    "httponly"  => true     //Proteção contra XSS
+    "samesite"  => "Lax"    //Proteção conta CSRF
+]);
+
+// 2. Iniciar ou restaurar a session ativa
+session_start();
+
+// 3. Gravar os dados ba sessão (após validar o Login)
+//usar a superglobal($_SESSION) para isso
+$_SESSION["usuario_id"] = 10;
+$_SESSION["usuario_perfil"] = "ADMIN";
+
+//4. Permitir a leitura dos dados em qualquer página do meu site
+$idLogado = $_SESSION["usuario_id"] ?? null; // se o usuario não tiver feito login a session é null
+
+```
+
+#### **Criptografia de Senhas**
+
+No passado, desenvolvedores armazenavam senhas utilizando funções matemáticas de integridade como `md5($senha)` ou `sha1($senha)`.
+
+> O MD5 foi quebrado em 2004 e SHA1 foi quebrado em 2017. 
+
+**A Solução Moderna é Criptografia com uso de Hash**
+
+O padrão de Criptografia Moderno é o **Argon2id**, complementado pelo **Bcrypt**
+
+**Características da Cryptografica de Hash**:
+1. **Unidirecional(One-Way):**  É matematicamente impossivel descriptografar o hash para recuperar a senha original.
+2. **Salt Automático e Aleatório**: A cada execução, a função gera um vetor de `salt` unico de 16 bytes. Mesmo que 2 pessoas tenham o mesma senha, os hashes gerados serão completamentes diferentes!
+3. **Custos Ajustáveis**: É possivel calibrar quanto tempo e quanta memória o algoritmo levará para calcular o hash.
+
+**Sintaxe Profissional de Cryptografia Moderna**
+
+```php
+$senhaDigitada = "123456";
+$senhaInformada = $_POST["senha"];
+$hashDoBanco    = $usuario["hash"];
+
+//gerar a hash utilizando Argon2id (ou Bcrypt)
+$hash = password_hash($senhaDigitada, PASSWORD_ARGON2ID);// isso será armazenado no banco
+//Saída: $argon2id$v=19$m65536,t=4,p=1$FSGJhfavdb...(comprimeto ~96 a 128 chars)
+
+// o Processo de Verificação
+if(password_verify($senha_informada, $hashDoBanco)){
+    //Senha Correta
+}else {
+    //Senha incorreta
+}
+
+```
+
+>[!Aviso]
+>Nunca tente fazer (password_hash($senha) === $hashDoBanco)
+>Como o `password_hash`gera um salt aleatírio a cada milisegundo, a comparação por igualdade **sempre dará falso**
+>A Verificação deve ser feita **exclusivamente com a função nativa `password_verify()`
+
+#### **Arquitetura de Autenticação: Middleware**
+
+para inpedir que visitantes não logados acessem páginas privadas (como dashboard.php ou relatorios.php), criamos interceptadores chamados **Guard (Middlewares de Proteção)**.
+
+```mermaid
+flowchart TD
+    req["Requisição do Navegador<br/>GET(dashboard.php)"] --> guard["Middleware: guard.php"]
+
+    guard --> check1{"$_SESSION[usuario_id existe?]"}
+    check1 -- Não --> kick1["header(login.php)"]
+
+    check1 -- Sim --> allow["header(dashboard.php)"]
+```
+**Como usar o guard.php**:
+
+Em todas as páginas restritas do sistema a **primira linha de código** após o `declare(strict_types=1)` será:
+
+```php
+require_onde __DIR__ . "/src/guard.php";
+```
+Se a pessoa não estiver autenticas ou não tiver o perfil de acesso, ela é expulsa antes mesmo que qualquer bytes de HTML seja renderizado
 
 

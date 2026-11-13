@@ -2127,7 +2127,7 @@ Ao longo das últimass Semana Estudamos a estrutura de Projetos em PHP e Agora V
 **O que é o Framework Laravel**
 
 Criado em 2011 por Taylor Otwell, O *Laravel* é atualmente o framework backend mais popular e consolidado do mundo. Ele adota o principio de *Convenção sobre Configuração* e Entrega os seguinte Conteúdos:
-1. **POrdutividade Imediata**: Estrutura padronizada onde todo desenvolvedor sênior sabe exatamente onde encontrar controllers, models, rotas e views.
+1. **Produtividade Imediata**: Estrutura padronizada onde todo desenvolvedor sênior sabe exatamente onde encontrar controllers, models, rotas e views.
 2. **Segurança por Padrão(Security by Default)**: Proteção nativa e automática contra XSS, CDRF, SQL Injection, manipulação indevida de cookies e fixação de sessão
 3. **Ferramental de Limnha de Comando(Artisan CLI)**: Automatiza a criação de classes, execução de migrações de banco, limpeza de cache e siagnósticos. 
 4. **Comunidade Global e Ecossistema Rico**: Milhares de pacotes prontos para autenticação robusta, mensageria, fila assincronas, geração de APIs Restful e websockets.
@@ -2141,3 +2141,441 @@ Criado em 2011 por Taylor Otwell, O *Laravel* é atualmente o framework backend 
 | **Camada de Dados (Model)** | `App\Models\Produto` com PDO manual | `App\Models\Ativo` (*Eloquent ORM*) | Mapeamento Objeto-Relacional avançado com relacionamentos expressivos (`hasMany`, `belongsTo`). |
 | **Camada de Visualização** | Scripts PHP nativos com `extract()` | Motor de Templates **Blade** (`.blade.php`) | Sintaxe limpa, herança de layouts, componentes reutilizáveis e escape automático contra XSS. |
 | **Isolamento de Credenciais** | `config/database.ini` | Arquivo `.env` (Padrão 12-Factor App) | Paridade entre ambientes (local, homologação e nuvem) com segurança estrita. |
+
+**A Estrutura de Diretórios do Laravel**
+
+Ao criar uma nova aplicação em Laravel, você se depara com uma árvore de pasta padronizadas. Cada pasta possui uma **responsabilidade única**
+
+```text
+senai-asset-manager/
+├── app/                  <- O coração da sua lógica de negócios
+│   ├── Http/
+│   │   └── Controllers/  <- Seus Controllers residem aqui
+│   ├── Models/           <- Seus Modelos Eloquent residem aqui
+│   └── Providers/        <- Provedores de serviços da aplicação
+├── bootstrap/            <- Inicialização do framework
+│   ├── app.php           <- Ponto central de configuração de rotas e middlewares
+│   └── cache/            <- Caches de inicialização do sistema
+├── config/               <- Arquivos de configuração publicáveis (banco, sessão, etc.)
+├── database/             <- Engenharia de Banco de Dados
+│   ├── factories/        <- Fábricas de dados falsos para testes (Faker)
+│   ├── migrations/       <- Controle de versão do esquema do banco de dados
+│   └── seeders/          <- Scripts para popular tabelas com dados iniciais
+├── public/               <- A ÚNICA PASTA ACESSÍVEL PELO SERVIDOR WEB
+│   ├── css/              <- Folhas de estilo compiladas
+│   ├── js/               <- Scripts front-end
+│   ├── index.php         <- O Front Controller da aplicação
+│   └── robots.txt
+├── resources/            <- Recursos brutos da interface com o usuário
+│   ├── css/              <- Arquivos CSS pré-compilação (Tailwind)
+│   ├── js/               <- Arquivos JavaScript pré-compilação
+│   └── views/            <- Templates do motor de visualização Blade (.blade.php)
+├── routes/               <- Mapeamento de rotas do sistema
+│   ├── console.php       <- Comandos de terminal customizados baseados em Closure
+│   └── web.php           <- Rotas HTTP para navegadores (com cookies e sessões)
+├── storage/              <- Arquivos gerados em tempo de execução
+│   ├── app/              <- Uploads e arquivos gerados pelo sistema
+│   ├── framework/        <- Sessões de arquivo, views compiladas e caches
+│   └── logs/             <- Logs cronológicos de erro e auditoria (laravel.log)
+├── tests/                <- Testes automatizados unitários e de integração
+├── .env                  <- ARQUIVO CONFIDENCIAL de variáveis de ambiente
+├── .env.example          <- Modelo público de variáveis para a equipe
+├── .gitignore            <- Impede o vazamento de segredos para o Git e GitHub
+├── artisan               <- O executável da CLI Artisan
+└── composer.json         <- Manifesto de dependências e autoload PSR-4
+```
+
+>[!Cuidado]
+>Apenas a pasta `public/` deve ser apontada pelo servidor web
+>Nunca aponte o servidor web para a raiz do projeto! Se fizer isso, qualquer visitante poderá navegar até `http://seusite.com/.env`e baixar todas as senhas do banco de dados e chaves de API da empresa
+
+**Segurança do Ambientes: O Arquivo `.env` e a `APP_KEY`**
+
+Em sistemas corporativos, uma aplicação passa por múltiplos ambientes ao longo do seu ciclo de vida:
+- **Ambiente local**: Na sua máquina de trabalho, com exibição detalhada de erros e banco de dados local
+- **Ambiente de Homologação**: Servidor onde a equipe de qualidade(QA) testa a aplicação em condições similares à realidade
+- **Ambiente de Produção**: O servidor na nuvem onde os clientes e operadores reais (usuários) utilizam o sistema. Nesse ambiente, `APP_DEBUG` deve ser `false` para não expor senhas ou estruturas internas em telas de erro
+
+
+>[Observação!!!]
+>`.env` ou `dababase.ini`: são arquivos para armazenamento de informações/dados sensíveis da aplicação
+>`.gitignore`: nesse arquivo são colocadas os nomes dos arquivos e pastas que não devem ser versionados(não são exposto no git ou github)
+
+1. **O Padrão de Segurança `12-Factor` e o Arquivo `.env`**
+
+Em vez de alterar senahs dentro do código PHP a cada deploy, o Laravel utiliza o padrão internacional de isolar as variáveis que mudam de ambiente em um arquivo de texto simples chamado `.env` (*Environments Variables*).
+
+2. **A Chave de Segurança `APP_KEY`**
+
+A `APP_KEY` é uma sequencia criptografada aleatória de 32 bytes codificada em Base64 gerada automaticamente pelo Laravel como padrão de segurançapara qualquer aplicação.
+
+>[!Observação]
+> Se a `APP_KEY`estiver vazia, o Laravel recusará a execução exibindo um erro na tela *No Application encryption key has been specified*
+> Se ocorrer a troca da `APP_KEY` em um sistema em produção, *todas as sessões ativas cairão e os dados cifrados com a chave antiga se tornarão inválidos e irrecuperáveis*
+
+```mermaid
+flowchart TD
+    key["APP_KEY (32 bytes aleatórios)<br/>Guardada com exclusividade no .env"]
+    
+    key --> op1["Criptografia de Cookies de Sessão<br/>(Impede adulteração no navegador)"]
+    key --> op2["Criptografia de Senhas e Tokens<br/>(Algoritmo AES-256-CBC)"]
+    key --> op3["Assinatura de URLs Temporárias<br/>(Links de recuperação de senha seguros)"]
+
+    style key fill:#fecaca,stroke:#dc2626,stroke-width:2px,color:#7f1d1d
+    style op1 fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+    style op2 fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+    style op3 fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+```
+
+
+3. **O Papel do `.env.example`**
+
+Como o arquvio `.env` est´pa listado no  `.gitignore`e nunca vai para o GitHub, como um colega de equipe sabe quais variáveis ele precisa configurar ao clonar o repositório? Através do arquivo `.env.example`, ele serve como um template documentado contendo as mesmas chaves do `.env, porém com valores fictícios ou vazios.
+
+
+#### **2. O Artisan CLI: O poder da Linha de Comando**
+
+O **Artisan** é a interface de linha de comando (Command-Line-Interface) nativa do Laravel. Ele é executado a partir do arquivo executável `artisan` localizado na raiz do projeto
+
+```bash
+php artisan [comando] [argumentos] [opções]
+```
+
+**Principais Comando do Artisan para a Rotina de Desenvolvimento**
+
+1. `php artisan serve`
+Inicializa o servidor HTTP local embutido de desenvolvimento, escutando por padrão em `http://127.0.0.1:8000`. É muito superior ao `php -S localhost:8000 -t public` tradicional porque já configura automaticamente o roteamento de assets estáticos e tratamento de reescrita de URL.
+- Para mudar a porta: `php artisan serve --port=8080`
+
+2. `php artisan key:generate`
+Gera uma chave criptográfica segura de 256 bits através de gerador de números pseudoaleatórios criptograficamente seguros e grava diretamente na variável `APP_KEY` do seu arquivo `.env`.
+
+3. `php artisan about`
+Introduzido nas versões modernas do Laravel, este comando faz uma varredura completa da saúde do ecossistema e imprime uma tabela no terminal com:
+- Versão do PHP e extensões carregadas.
+- Versão do Laravel instalada.
+- Status do ambiente (`local`, `production`).
+- Status do modo de depuração (`Debug Mode: ENABLED/DISABLED`).
+- Drivers ativos de Banco de Dados, Cache, Sessão e Filas.
+
+4. `php artisan list`
+Exibe o catálogo completo de comandos disponíveis na aplicação, agrupados por categorias (`make:`, `migrate:`, `route:`, `db:`, `config:`).
+
+5. `php artisan make:controller NomeDoController`
+Gera automaticamente um novo arquivo de classe Controller já configurado com o namespace correto (`App\Http\Controllers`), herança da classe base e declarações estritas, eliminando erros manuais de digitação.
+
+6. `php artisan make:model NomeDoModel`
+Gera automaticamente a classe de modelo Eloquent sob a pasta `App\Models`.
+
+7. `php artisan route:list`
+Gera uma tabela formatada no terminal listando todas as rotas registradas na aplicação, incluindo os verbos HTTP correspondentes (GET, POST), URIs, nomes de rota e a respectiva ação no Controller.
+
+8. `php artisan tinker`
+Abre um terminal interativo (*REPL - Read-Eval-Print Loop*) baseado no PsySH. Permite testar comandos PHP, instanciar models, consultar bancos de dados e verificar configurações diretamente pela linha de comando com toda a aplicação Laravel inicializada em memória!
+
+```mermaid
+mindmap
+  root((Artisan CLI))
+    Diagnóstico e Servidor
+      php artisan serve
+      php artisan about
+      php artisan list
+    Geração de Código
+      php artisan make:controller
+      php artisan make:model
+      php artisan make:migration
+    Segurança e Manutenção
+      php artisan key:generate
+      php artisan cache:clear
+      php artisan optimize:clear
+    Exploração Interativa
+      php artisan tinker
+      php artisan route:list
+```
+
+---
+
+### Semana 14 - Rotas HTTP, Controllers de Recursos e Injeçãi de Dependência no Laravel
+
+**Tema**: Rotemento HTTP, Arquitetura RestFul e Verbos HTTP (GET, POST, PUT, PATCH, DELETE), Parâmetro de Rotas, Rotas Nomeadas, Controllers de Recursos (CRUD Padronizado), Injeção de Dependência via Service Container, Method Spooting, Proteção contra Ataque @CSRF e Inspeção de Rotas.
+
+#### **1. O Protocolo HTTP no LARAVEL**
+
+Nas aplicações web legadas ou amadoras, é comum encontrar estruturas de URLs desorganizadas e perigosas que violam as boas práticas de engenharia de software e da segurança da informação. Observe este exemplo de código inseguro:
+
+```html
+<!-- Exemplo Legado Vulnerável: Ações destrutivas executadas via GET-->
+ <a href="excluir_cliente.php?id=10">Excluir Cliente</a>
+ ```
+
+Este tipo de Código pode Gerar uma ação desastrutiva ao usar o código de mapeamento com o **GET**, a aplicação fica exposta a desastres silenciosos:
+1. **Robôs de Busca e Indexadores (*Web Crawlers*)**: Robôs como Googlebot ou indexadores vasculham links `<a>` das páginas. Se encontram o link de exclusão, eles seguirão a URL e **Apagarão todos os registro do banco de dados automaticamentee**.
+2. **Pre-Carregamento do Navegador**: Navegadores modernos tentam acelerear a navegação fazendo requisições em segundo plano para links visíveis na tela.. Se o link de deletar estiver lá, a conta do cliente é excluida antes memso de o usuário clicar para deletar.
+3. **Histórico e Compartilhamento**: URLs GET com parâmetros destrutivos ficam salvas no histórico do navegador, em favoritos e em logs de servidores proxy. podendo ser acessadas indevidamente. 
+
+```mermaid
+flowchart LR
+    subgraph Inseguro ["Abordagem Legada (Insegura e Caótica)"]
+        l1["GET /listar_clientes.php"]
+        l2["GET /cadastrar_cliente.php"]
+        l3["POST /salvar_cliente.php"]
+        l4["GET /editar_cliente.php?id=10"]
+        l5["GET /deletar_cliente.php?id=10 (Perigo!)"]
+    end
+
+    subgraph RESTful ["Arquitetura RESTful no Laravel 11 (Padronizada)"]
+        r1["GET /clientes (Listar)"]
+        r2["POST /clientes (Criar)"]
+        r3["GET /clientes/{id} (Detalhar)"]
+        r4["PUT /clientes/{id} (Atualizar)"]
+        r5["DELETE /clientes/{id} (Excluir Seguro)"]
+    end
+
+    style Inseguro fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#7f1d1d
+    style RESTful fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+```
+
+**A Mudança na Filosofia da Arquitetura REST(*Representation State Transfer*) no Laravel**
+
+Na Arquitetura RestFul adotada pelo Laravel:
+- A **URI** (o endereço) representa o **recurso** no plural: `/clientes`, `/ativos`, `/pecas`.
+- O **Verbo HTTP** indica a **ação** que deseja executar sobre aquele recurso. 
+- O mesmo endereço `/cliente/10` tem significado completamente diferentes e seguros dependendo do método HTTP enviado pelo cliente
+
+```html
+@delete
+<a href="/clientes/10">Excluir Cliente</a>
+```
+
+**A Matriz de Verbos HTTP no Laravel**
+
+O protocolo HTTP/1.1 define verbos com semânticas bem delineadas que o Laravel implementa de forma declarativa e expressiva:
+
+| Verbo HTTP | Intenção de Engenharia | É Seguro? | É Idempotente? | Uso Típico no Laravel |
+| :---: | :--- | :---: | :---: | :--- |
+| **GET** | Recuperar dados sem causar efeitos colaterais no servidor. | **Sim** | **Sim** | Exibir telas, consultar listagens e buscar detalhes. |
+| **POST** | Criar um novo recurso subordinado no servidor. | **Não** | **Não** | Submeter formulários de cadastro e criar registros. |
+| **PUT** | Substituir integralmente um recurso existente no servidor. | **Não** | **Sim** | Atualizar todos os dados cadastrais de um cliente. |
+| **PATCH** | Modificar parcialmente campos específicos de um recurso. | **Não** | **Não** | Alterar apenas o status de um cliente (ex.: ATIVO para INATIVO). |
+| **DELETE** | Remover ou inativar permanentemente o recurso especificado. | **Não** | **Sim** | Excluir um cliente ou contrato de manutenção. |
+
+> **Conceito de Idempotente**
+> Uma requisição é dita **idempotente** quando executada uma única vez ou dez vezes consecutiva e resultar exatamente na mesma resposta pelo servidor
+> `DELETE /clientes/10` é idempotente (após a primeira exclusão, não tem mais o que excluir), posso executar várias vezes e o resultado é sempre o mesmo
+> `POST /clientes` não é idempotente (se vc clicar 10 vezes cada vez irá criar um novo cliente no sistema), a não ser, que exista uma trava no sistema, para evitar criar clientes duplicados. 
+
+
+#### **2. Controllers de Recursos**
+
+Em Aplicações corporativas ou modernas, praticamente todas as entidades de negócio necessitam da mesma operações fundamentais -> CRUD (**Listar, Exibir, Detalhar, Criar, Editar, Atualizar e Excluir**)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Navegador as Navegador Web
+    participant Router as routes/web.php
+    participant Ctrl as ClienteController
+    participant View as Blade / Resposta
+
+    Note over Router: Route::resource('clientes', ClienteController::class);
+
+    Navegador->>Router: GET /clientes
+    Router->>Ctrl: index()
+    Ctrl-->>View: Renderiza listagem completa
+
+    Navegador->>Router: GET /clientes/create
+    Router->>Ctrl: create()
+    Ctrl-->>View: Renderiza formulário em branco
+
+    Navegador->>Router: POST /clientes
+    Router->>Ctrl: store(Request $request)
+    Ctrl-->>View: Persiste e redireciona (302)
+
+    Navegador->>Router: GET /clientes/{id}
+    Router->>Ctrl: show($id)
+    Ctrl-->>View: Renderiza detalhes do parceiro
+
+    Navegador->>Router: GET /clientes/{id}/edit
+    Router->>Ctrl: edit($id)
+    Ctrl-->>View: Renderiza formulário pré-preenchido
+
+    Navegador->>Router: PUT /clientes/{id}
+    Router->>Ctrl: update(Request $request, $id)
+    Ctrl-->>View: Atualiza e redireciona (302)
+
+    Navegador->>Router: DELETE /clientes/{id}
+    Router->>Ctrl: destroy($id)
+    Ctrl-->>View: Remove e redireciona (302)
+```
+
+**Geração via Artisan CLI do Controller**
+
+```bash
+php artisan make:controller ClienteControler --resource
+```
+o comando acima cria o arquivo `app/Http/Constrollers/ClienteController.php` já com as 7 assinaturas de métodos prontas para implementação 
+
+**Mapamento das Rotas Única**
+
+//routes/web.php
+`Route::resource("clientes", ClienteController::class);`
+
+ao usar esse código é criado todas as rotas de navegação para os métodos do controller
+
+**Inspeção de Rotas no Terminal**
+
+```bash
+php artisan route:list
+```
+
+```text
+  GET|HEAD        clientes ................... clientes.index › ClienteController@index
+  POST            clientes ................... clientes.store › ClienteController@store
+  GET|HEAD        clientes/create ............ clientes.create › ClienteController@create
+  GET|HEAD        clientes/{cliente} ......... clientes.show › ClienteController@show
+  PUT|PATCH       clientes/{cliente} ......... clientes.update › ClienteController@update
+  DELETE          clientes/{cliente} ......... clientes.destroy › ClienteController@destroy
+  GET|HEAD        clientes/{cliente}/edit .... clientes.edit › ClienteController@edit
+```
+
+**Leitura de Informações das Páginas**
+
+No PHP procedural, acess-ase dados brutos através de superglobais inseguras: `$_POST["name"]` ou `$_GET["name"]`. No Laravel, essa abordagem é expressamente proibida. Em vez disso, usamo o **Service Container** do framework através da **Injeção de Dependências po Tipo**
+
+**Demonstração de um Exemplo Prático**
+
+```php
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+
+final class ClienteController extends Controller {
+    /**
+     * Salva o novo cliente injetando a requisicao HTTP com tipagem estrita.
+     */
+    public function store(Request $request): RedirectResponse {
+        // 1. Validacao rapida de integridade
+        $validados = $request->validate([
+            'razao_social' => 'required|min:3',
+            'cnpj'         => 'required|unique'
+        ]);
+
+        // 2. Extracao segura de campos
+        $razaoSocial = (string)$request->input('razao_social');
+        $cnpj = (string)$request->input('cnpj');
+
+        Cliente::create($validados); //insere os dados no banco
+
+        // 3. Verificacao de presenca de dados
+        if ($request->has('email')) {
+            $email = (string)$request->input('email');
+        }
+
+        return redirect()->route('clientes.index');
+    }
+}
+```
+
+> Basta declarar o parâmetro `Request $request`na assinatura  do método do Controller. O Laravel inspeciona a assinatura via *Preflection API*, instancia o objeto com os dados da requisição e entrega pronto para uso.
+
+
+#### **3. Roteameto Declarativo e Parâmetros no Laravel**
+
+Nunca digite URLs(rotas) diretamente no HTML, como `<a href="/clientes/10/editar">`. Se o time de produtoção/desenvolvimento decidir renomear a rota para `/cliente/10/modificar`, será necessário alterar centenas de arquivos manualmente. PAra evitar essa situação nos criamos no arquivo `routes/web.php` as **Rotas Nomeadas**. Com isso, atribuimos apenlidos únicos à rota e usamso o helper global `route()`: para declarar essa rotas no arquivos html
+
+**Exemplo**:
+```php 
+//Definição de rotos no routes/web.php
+Route::get("/clientes/{id}/editar", [ClientesController::class],"edit") -> name("clientes.edit");
+
+//Utilizamos no tempalte Blade<VIew HTML> ou no Controller:
+//Gerando automaticamente a rota : http://seuEndereco:Porta/clientes/10/editar
+$url = route("clientes.edit", ["id" => 10]);
+```
+
+#### **4. Segurança em Formulários: Proteção CSRF e Método Spoofing**
+
+**PRoteção contra **Cross-Site Request Forgery** (`@csrf`)
+
+O ataque CSRF ocorre quando um site malicioso força o navegador de um usuário autenticado a enviar comndos indesejados para a sua aplicação sem o consentimento dele. O Laravel neutraliza esse ataque gerenado um token criptografado único por sessão. Todo formulário POST, PT, ou DELETE deve incluir a diretiva no Blade
+
+```html
+<form action="{{'clientes.store'}}" methodo="POST">
+    @csrf
+    <!-- O Blade gera -->
+     <input type="hidden" name="_token" value="dfrefg...">
+</form>
+```
+
+>[OBS!!!]
+>Se você esquecer a diretiva @csrf em um formulário POST, o laravel interceptará a requisição e abordará imediatamente com o erro de segurança **HTTP 419 - PAGE EXPIRED**!
+
+**Simulação de Métodos HTTP (*Method Spoofing com `@method`):**
+
+A especificações do HTML5 possui limitações históricas conhecidas em formulários: **HTML suportam nativamente apenas os métodos `GET` e `POST` no atributo `method="..."`**
+
+Como enviar requisições `PUT`para atualizar ou `DELETE`para excluir dados através de formuláros web padrão?
+
+O Laravael resolve isso através da técnica de **Method Spoofing**: definindo o fomrulário com `method="POST"` e injetando o campo oculto `_method` através da diretiva Blade `@method("VERBO")`:
+
+*Exemplos de aplicação:*
+
+Formulário de Atualização (PUT):
+```blade
+<form action="{{ route('clientes.update', $cliente['id']) }}" method="POST">
+    @csrf
+    @method('PUT')
+    <!-- O Blade gera: <input type="hidden" name="_method" value="PUT"> -->
+    <button type="submit">Salvar Alterações</button>
+</form>
+```
+
+Botão de Exclusão Destrutiva (DELETE):
+```blade
+<form action="{{ route('clientes.destroy', $cliente['id']) }}" method="POST" onsubmit="return confirm('Confirmar exclusão?');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" style="color:red;">Excluir Parceiro</button>
+</form>
+```
+
+### Semana 15 - Motor de Templates `Blade`, Herança de Layouts e Componentes do Laravel
+
+**Tema**:  O Template Blade , Compilação e Cache de Views, Interpolação de Dados , Proteção contra XSS, Diretivas Condicionais e de Fluxo, Laços de Repetição e Iteração. Herança de layouts Mestres.
+
+#### **1. A Camada de Visualização Blade**
+
+Nas Semanas Anteriores construimos as aplicações do Laravel utilizando  as seguntes bases:
+- Semana 13 : dominamos a infraestrutura do Laravel, o ambiente enxuto, o arquivo .env e os comandos do Artisan CLI.
+- Semana 14: exploramos o roteamento RESTful, verbos HTTP (GET, POST, PUT, DELETE), parâmetros e Resource Controllers.
+
+Nesta Semana iremos estudar a intterface visual da aplicação e a diferença entre PHP vanila e o PHP Laravel neste quesito.
+
+**Exemplo de uso daa Camada de Visualização no PHPP Vanilla**
+
+```php
+<!-- ARQUIVO LEGADO: lista_ordens.php (O PESADELO DA MANUTENÇÃO) -->
+<!DOCTYPE html>
+<html>
+<head><title>Sistema de Manutenção</title></head>
+<body>
+    <header><h1>SENAI Manutenção</h1><nav>Menu...</nav></header>
+    <?php
+    // Mistura de lógica de banco e HTML solto
+    $ordens = $pdo->query("SELECT * FROM ordens")->fetchAll();
+    foreach ($ordens as $o) {
+        // Vulnerabilidade Crítica de XSS: Sem sanitização na saída
+        echo "<div>" . $o['titulo'] . " - " . $o['responsavel'] . "</div>";
+    }
+    ?>
+    <footer>SENAI 2026</footer>
+</body>
+</html>
+```
+
+**Os Problemas da Abordagem PHP Vanilla**:
+
+1. **Duplicidade de Códigos**: Se a aplicação possuir 30 telas, as tags `<DOCTYPE html>` `<head>` e outras tags como menus, rodapés e cabeçalhos deverão ser copiadas e coladas as 30 vezes. Se o logo da empresa mudar, por exemplo, o desenvolvedor terá que editar 30 vezes os arquivos manualmente.
+2. **Vulnerabilidade e Ataques XSS**: Ao utilizarmos `echo $variavel` sem `htmlspecialchars()`, qualquer script malicioso pode ser gravado no banco de dados (ex: `<script>RoubarCookies</script>`) e será executado silenciosamente no navegador do usuário.
+3. 
